@@ -34,11 +34,11 @@ const config = {
     return this.site + "/assets/seo/og-image.png";
   },
   social: {
-    // twitter: "https://x.com/bitbybitstudio",
+    twitter: "", // "https://x.com/bitbybitstudio",
     linkedin: "https://www.linkedin.com/company/bit-by-bit-789/",
     instagram: "https://www.instagram.com/bitbybitstudio",
     facebook: "https://www.facebook.com/bitbybitstudio",
-    // github: "https://github.com/bitbybitstudio",
+    github: "", // "https://github.com/bitbybitstudio",
   },
 };
 export { config };

@@ -1,6 +1,8 @@
 import React from "react";
 import { getBlogPost, getBlogPosts } from "@/lib/mdx";
-import { MDXRemote } from "next-mdx-remote/rsc";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 import ScrollProgress from "@/components/ui/scroll-progress";
 import Link from "next/link";
 import { ArrowLeft, CalendarDays, User } from "lucide-react";
@@ -14,8 +16,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = getBlogPost(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = getBlogPost(slug);
   return {
     title: `${post.metadata.title} | Portfolio`,
     description: post.metadata.summary,
@@ -59,8 +62,9 @@ const components = {
   ),
 };
 
-export default function BlogPost({ params }: { params: { slug: string } }) {
-  const post = getBlogPost(params.slug);
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = getBlogPost(slug);
 
   return (
     <div className="min-h-screen relative font-sans">
@@ -104,7 +108,13 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
         <RevealAnimation delay={0.2}>
           <article className="prose prose-invert max-w-none">
-            <MDXRemote source={post.content} components={components} />
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeHighlight]}
+              components={components as any}
+            >
+              {post.content}
+            </ReactMarkdown>
           </article>
         </RevealAnimation>
       </div>
